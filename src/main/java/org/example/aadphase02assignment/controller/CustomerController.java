@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v3/customer")
-public class CustomerController {
+public class CustomerController  {
 }
