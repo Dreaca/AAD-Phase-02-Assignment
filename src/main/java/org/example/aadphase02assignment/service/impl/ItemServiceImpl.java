@@ -32,7 +32,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(ItemDTO itemDTO) {
+    public void updateItem(String itemCode, ItemDTO itemDTO) {
 
     }
+
 }
