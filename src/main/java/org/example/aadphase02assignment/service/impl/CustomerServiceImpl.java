@@ -1,5 +1,6 @@
 package org.example.aadphase02assignment.service.impl;
 
+import org.example.aadphase02assignment.dto.CustomerStatus;
 import org.example.aadphase02assignment.dto.impl.CustomerDTO;
 import org.example.aadphase02assignment.service.CustomerService;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomer(String customerId) {
+    public CustomerStatus getCustomer(String customerId) {
         return null;
     }
 

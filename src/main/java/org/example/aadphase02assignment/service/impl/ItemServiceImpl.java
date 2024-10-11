@@ -1,5 +1,6 @@
 package org.example.aadphase02assignment.service.impl;
 
+import org.example.aadphase02assignment.dto.ItemStatus;
 import org.example.aadphase02assignment.dto.impl.ItemDTO;
 import org.example.aadphase02assignment.service.ItemService;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDTO getItemById(String id) {
+    public ItemStatus getItemById(String id) {
         return null;
     }
 

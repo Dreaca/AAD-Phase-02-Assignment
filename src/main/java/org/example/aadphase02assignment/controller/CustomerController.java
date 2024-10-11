@@ -1,5 +1,7 @@
 package org.example.aadphase02assignment.controller;
 
+import org.example.aadphase02assignment.customStatusCodes.SelectedItemCustomerOrderErrorStatusCodes;
+import org.example.aadphase02assignment.dto.CustomerStatus;
 import org.example.aadphase02assignment.dto.impl.CustomerDTO;
 import org.example.aadphase02assignment.exceptions.CustomerNotFoundException;
 import org.example.aadphase02assignment.exceptions.DataPersistException;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("api/v3/customer")
@@ -33,32 +36,27 @@ public class CustomerController  {
         }
     }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        try {
-            List<CustomerDTO> customerDTOList = customerService.getAllCustomers();
-            return new ResponseEntity<>(customerDTOList, HttpStatus.OK);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public List<CustomerDTO> getAllCustomers() {
+        return customerService.getAllCustomers();
     }
     @GetMapping(value = "/{customerId}")
-    public ResponseEntity<CustomerDTO> getCustomer(@PathVariable("customerId") String customerId) {
-        try {
-            CustomerDTO customerDTO = customerService.getCustomer(customerId);
-            return new ResponseEntity<>(customerDTO, HttpStatus.OK);
+    public CustomerStatus getCustomer(@PathVariable("customerId") String customerId) {
+        String regexForUserID = "^CID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForUserID);
+        var regexMatcher = regexPattern.matcher(customerId);
+        if (!regexMatcher.matches()) {
+            return new SelectedItemCustomerOrderErrorStatusCodes(1,"Customer ID not valid");
         }
-        catch (CustomerNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return customerService.getCustomer(customerId);
     }
     @DeleteMapping(value = "/{customerId}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable("customerId") String customerId) {
+        String regexForUserID = "^CID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForUserID);
+        var regexMatcher = regexPattern.matcher(customerId);
+        if (!regexMatcher.matches()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             customerService.deleteCustomer(customerId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -73,6 +71,12 @@ public class CustomerController  {
     }
     @PutMapping(value = "/{customerId}",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateCustomer(@PathVariable("customerId") String customerId, @RequestBody CustomerDTO customerDTO) {
+        String regexForUserID = "^CID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$";
+        Pattern regexPattern = Pattern.compile(regexForUserID);
+        var regexMatcher = regexPattern.matcher(customerId);
+        if (!regexMatcher.matches()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             customerService.updateCustomer(customerId, customerDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
