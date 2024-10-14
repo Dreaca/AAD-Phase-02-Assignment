@@ -30,15 +30,15 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(name = "/orderId",produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getOrderId(){
-        return AppUtil.generateOrderId();
-    }
+//    @GetMapping(name = "/orderId",produces = MediaType.APPLICATION_JSON_VALUE)
+//    public String getOrderId(){
+//        return AppUtil.generateOrderId();
+//    }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<OrderDTO> getOrders(){
         return orderService.getOrders();
     }
-    @GetMapping(value = "${orderId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "$/{orderId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable("orderId") String orderId){
         try {
             orderService.getOrder(orderId);
@@ -49,7 +49,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping(value = "${orderId}")
+    @DeleteMapping(value = "$/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable("orderId") String orderId){
         try{
             orderService.deleteOrder(orderId);
@@ -60,7 +60,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,value = "${orderId}")
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,value = "$/{orderId}")
     public ResponseEntity<Void> updateOrder(@RequestBody OrderDTO order, @PathVariable("orderId") String orderId){
         try {
             orderService.updateOrder(order,orderId);

@@ -28,7 +28,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void saveItem(ItemDTO itemDTO) {
         ItemEntity saved = itemDao.save(mapping.toItemEntity(itemDTO));
-        if (saved != null) {
+        if (saved == null) {
             throw new DataIntegrityViolationException("Item already exists");
         }
     }

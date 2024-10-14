@@ -25,6 +25,7 @@ public class ItemController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveItem(@RequestBody ItemDTO itemDTO) {
         itemDTO.setItemCode(AppUtil.generateItemId());
+        System.out.println(itemDTO);
         try {
             itemService.saveItem(itemDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
