@@ -9,5 +9,5 @@ public interface OrderService {
     List<OrderDTO> getOrders();
     OrderDTO getOrder(String orderId);
     void deleteOrder(String orderId);
-    void updateOrder(OrderDTO order);
+    void updateOrder(OrderDTO order,String orderId);
 }

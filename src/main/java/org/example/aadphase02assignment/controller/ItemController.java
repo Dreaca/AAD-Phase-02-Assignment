@@ -6,6 +6,7 @@ import org.example.aadphase02assignment.dto.impl.ItemDTO;
 import org.example.aadphase02assignment.exceptions.DataPersistException;
 import org.example.aadphase02assignment.exceptions.ItemNotFoundException;
 import org.example.aadphase02assignment.service.ItemService;
+import org.example.aadphase02assignment.util.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ public class ItemController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveItem(@RequestBody ItemDTO itemDTO) {
+        itemDTO.setItemCode(AppUtil.generateItemId());
         try {
             itemService.saveItem(itemDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -44,7 +46,7 @@ public class ItemController {
         Pattern regexPattern = Pattern.compile(regexForUserID);
         var regexMatcher = regexPattern.matcher(itemCode);
         if (!regexMatcher.matches()) {
-            return new SelectedItemCustomerOrderErrorStatusCodes(2,"Item code not valid");
+            return new SelectedItemCustomerOrderErrorStatusCodes(1,"Item code not valid");
         }
         return itemService.getItemById(itemCode);
     }

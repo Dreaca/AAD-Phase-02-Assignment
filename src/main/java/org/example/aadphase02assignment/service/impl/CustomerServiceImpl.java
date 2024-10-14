@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DataPersistException("Customer id is empty");
         } else if (customerDao.existsById(customerId)) {
             CustomerEntity customer = customerDao.getReferenceById(customerId);
-            return (CustomerStatus) mapping.toCustomerDTO(customer);
+            return  mapping.toCustomerDTO(customer);
         }
         return new SelectedItemCustomerOrderErrorStatusCodes(2,"Customer with ID"+customerId+" not found");
     }
@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomer(String customerId) {
         Optional<CustomerEntity> existedUser = customerDao.findById(customerId);
         if(!existedUser.isPresent()){
-            throw new CustomerNotFoundException(customerId);
+            throw new CustomerNotFoundException("Customer with id "+customerId+" not found");
         }else {
             customerDao.deleteById(customerId);
         }

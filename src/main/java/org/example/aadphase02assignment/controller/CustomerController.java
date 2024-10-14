@@ -6,6 +6,7 @@ import org.example.aadphase02assignment.dto.impl.CustomerDTO;
 import org.example.aadphase02assignment.exceptions.CustomerNotFoundException;
 import org.example.aadphase02assignment.exceptions.DataPersistException;
 import org.example.aadphase02assignment.service.CustomerService;
+import org.example.aadphase02assignment.util.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ public class CustomerController  {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveCustomer(@RequestBody CustomerDTO customerDTO) {
+        customerDTO.setCustomerId(AppUtil.generateCustomerId());
         try {
             customerService.saveCustomer(customerDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);

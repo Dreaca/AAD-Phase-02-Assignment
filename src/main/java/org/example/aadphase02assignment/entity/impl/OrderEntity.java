@@ -22,7 +22,12 @@ public class OrderEntity implements SuperEntity {
     private Double totalPrice;
     private String discount;
     private Double subTotal;
-    @ManyToMany(mappedBy = "itemId")
+    @ManyToMany
+    @JoinTable(
+            name = "order_items",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_code")
+    )
     private List<ItemEntity> items;
 
 }

@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrder(OrderDTO order) {
+    public void updateOrder(OrderDTO order, String orderId) {
 
     }
 }

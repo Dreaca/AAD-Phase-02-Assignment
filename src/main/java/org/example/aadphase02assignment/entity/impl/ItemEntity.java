@@ -22,6 +22,6 @@ public class ItemEntity implements SuperEntity {
     private int qto;
     private String author;
     private double price;
-    @ManyToMany
+    @ManyToMany(mappedBy = "items")
     private List<OrderEntity> orders;
 }
