@@ -11,6 +11,7 @@ import org.example.aadphase02assignment.dto.impl.OrderRequestDto;
 import org.example.aadphase02assignment.entity.impl.CustomerEntity;
 import org.example.aadphase02assignment.entity.impl.ItemEntity;
 import org.example.aadphase02assignment.entity.impl.OrderEntity;
+import org.example.aadphase02assignment.entity.impl.OrderItemEntity;
 import org.example.aadphase02assignment.exceptions.CustomerNotFoundException;
 import org.example.aadphase02assignment.exceptions.DataPersistException;
 import org.example.aadphase02assignment.service.OrderService;
@@ -28,7 +29,6 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@CrossOrigin
 
 public class OrderServiceImpl implements OrderService {
     @Autowired
@@ -46,35 +46,44 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackFor = {Exception.class, DataPersistException.class})
     public void saveOrder(OrderRequestDto order) throws DataPersistException {
         List<CartItemDto> cartItems = order.getCartItems();
-        ArrayList<ItemDTO> itemList = new ArrayList<>();
+
 
         try {
             CustomerEntity customer = customerDao.findById(order.getCustomerId()).orElseThrow(()-> new CustomerNotFoundException("Customer not found"));
-            for (CartItemDto cartItem : cartItems) {
-                String itemCode = cartItem.getItemCode();
 
-                // Retrieve the item entity and update the stock
-                ItemEntity item = itemDao.findById(itemCode).orElseThrow(() -> new DataPersistException("Item not found: " + itemCode));
-
-                itemList.add(mapping.toItemDTO(item));
-                // Decrease the item quantity based on the ordered quantity
-                if (item.getQto() < cartItem.getQty()) {
-                    throw new DataPersistException("Insufficient stock for item: " + itemCode);
-                }
-                item.setQto(item.getQto() - cartItem.getQty());
-                itemDao.save(item);  // Save the updated item with decreased quantity
-            }
-
-            // Save the order
-            OrderEntity savedOrder = orderDao.save(mapping.toOrderEntity(new OrderDTO(
+            OrderEntity newOrder = mapping.toOrderEntity(new OrderDTO(
                     order.getOrderId(),
                     mapping.toCustomerDTO(customer),
                     order.getDate(),
                     order.getTotal(),
                     order.getDiscount(),
                     order.getSubTotal(),
-                    itemList
-            )));
+                    new ArrayList<>()
+            ));
+
+            for (CartItemDto cartItem : cartItems) {
+                String itemCode = cartItem.getItemCode();
+
+                // Retrieve the item entity and update the stock
+                ItemEntity item = itemDao.findById(itemCode).orElseThrow(() -> new DataPersistException("Item not found: " + itemCode));
+
+                // Decrease the item quantity based on the ordered quantity
+                if (item.getQto() < cartItem.getQty()) {
+                    throw new DataPersistException("Insufficient stock for item: " + itemCode);
+                }
+                item.setQto(item.getQto() - cartItem.getQty());
+                itemDao.save(item);  // Save the updated item with decreased quantity
+
+                // Create an OrderItemEntity for each item in the cart
+                var orderItem = new OrderItemEntity();
+                orderItem.setOrder(newOrder);
+                orderItem.setItem(item);
+                orderItem.setQuantity(cartItem.getQty());
+                newOrder.getOrderItems().add(orderItem); // Add the OrderItemEntity to the order
+            }
+
+            // Save the order
+            OrderEntity savedOrder = orderDao.save(newOrder);
 
             if (savedOrder == null) {
                 throw new DataPersistException("Could not save order");
@@ -87,11 +96,10 @@ public class OrderServiceImpl implements OrderService {
             throw new DataPersistException("An error occurred while saving the order");
         }
     }
-
-
     @Override
     public List<OrderDTO> getOrders() {
-        return List.of();
+        List<OrderEntity> all = orderDao.findAll();
+        return mapping.toOrderDTOList(all);
     }
 
     @Override

@@ -17,5 +17,5 @@ public class OrderDTO implements SuperDto{
     private double total;
     private String discount;
     private double subtotal;
-    private List<ItemDTO>items;
+    private List<OrderDetailDto>items;
 }

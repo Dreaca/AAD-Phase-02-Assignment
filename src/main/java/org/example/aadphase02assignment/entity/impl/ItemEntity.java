@@ -17,9 +17,11 @@ public class ItemEntity implements SuperEntity {
     @Id
     private String itemCode;
     private String itemName;
-    private int qto;
+    private int qto; // This can be used for inventory or stock count
     private String author;
     private double price;
-    @ManyToMany(mappedBy = "items")
-    private List<OrderEntity> orders;
+
+    // Change from List<OrderEntity> to List<OrderItemEntity>
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<OrderItemEntity> orderItems; // Now holds OrderItemEntity
 }

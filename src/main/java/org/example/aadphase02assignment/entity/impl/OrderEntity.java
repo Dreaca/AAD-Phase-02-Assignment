@@ -16,19 +16,17 @@ import java.util.List;
 public class OrderEntity implements SuperEntity {
     @Id
     private String orderId;
+
     @ManyToOne
     @JoinColumn(name = "customerId", nullable = false)
     private CustomerEntity customer;
+
     private String orderDate;
-    private Double totalPrice;
+    private Double total;
     private String discount;
     private Double subTotal;
-    @ManyToMany
-    @JoinTable(
-            name = "order_items",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_code")
-    )
-    private List<ItemEntity> items;
 
+    // Change from List<ItemEntity> to List<OrderItemEntity>
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItemEntity> orderItems; // Now holds OrderItemEntity
 }

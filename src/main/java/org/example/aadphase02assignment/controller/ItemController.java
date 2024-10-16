@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("api/v3/item")
-@CrossOrigin
 public class ItemController {
     @Autowired
     private ItemService itemService;

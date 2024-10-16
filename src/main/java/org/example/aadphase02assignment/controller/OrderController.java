@@ -51,10 +51,7 @@ public class OrderController {
     public String getOrderId(){
         return AppUtil.generateOrderId();
     }
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<OrderDTO> getOrders(){
-        return orderService.getOrders();
-    }
+
 
     @GetMapping(value = "$/{orderId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable("orderId") String orderId){

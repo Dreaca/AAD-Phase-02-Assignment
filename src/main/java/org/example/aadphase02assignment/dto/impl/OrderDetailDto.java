@@ -9,10 +9,9 @@ import org.example.aadphase02assignment.dto.SuperDto;
 @NoArgsConstructor
 @Data
 public class OrderDetailDto implements SuperDto {
+    private long id;
     private String orderId;
-    private String customerId;
     private String itemId;
     private int qty;
-    private double unitPrice;
 
 }
