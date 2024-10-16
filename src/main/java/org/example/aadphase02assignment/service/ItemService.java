@@ -11,4 +11,5 @@ public interface ItemService {
     List<ItemDTO> getAllItems();
     void deleteItem(String id);
     void updateItem(String itemCode,ItemDTO itemDTO);
+    public List<String> findSuggestions(String query);
 }

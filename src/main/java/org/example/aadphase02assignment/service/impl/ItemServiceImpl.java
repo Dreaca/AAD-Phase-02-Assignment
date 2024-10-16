@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,5 +71,17 @@ public class ItemServiceImpl implements ItemService {
             itemEntity.get().setPrice(itemDTO.getPrice());
         }
     }
+    @Override
+    public List<String> findSuggestions(String query) {
+        // Assuming that you have an ItemEntity class with 'id', 'name', 'price', and 'qty' properties
+        List<ItemEntity> items = itemDao.findAll();
+
+        // Filter items based on the query and return a formatted string for each item
+        return items.stream()
+                .filter(item -> item.getItemName().toLowerCase().contains(query.toLowerCase()))
+                .map(item -> String.format(" Name: %s -Code: %s -Price: %s -QTO: %d", item.getItemName(), item.getItemCode(), item.getPrice(), item.getQto()))
+                .collect(Collectors.toList());
+    }
+
 
 }

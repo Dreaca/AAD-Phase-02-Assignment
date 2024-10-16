@@ -5,6 +5,7 @@ import org.example.aadphase02assignment.dao.CustomerDao;
 import org.example.aadphase02assignment.dto.CustomerStatus;
 import org.example.aadphase02assignment.dto.impl.CustomerDTO;
 import org.example.aadphase02assignment.entity.impl.CustomerEntity;
+import org.example.aadphase02assignment.entity.impl.ItemEntity;
 import org.example.aadphase02assignment.exceptions.CustomerNotFoundException;
 import org.example.aadphase02assignment.exceptions.DataPersistException;
 import org.example.aadphase02assignment.service.CustomerService;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -66,5 +68,14 @@ public class CustomerServiceImpl implements CustomerService {
            existedUser.get().setCustomerAddress(customerDTO.getCustomerAddress());
            existedUser.get().setCustomerPhone(customerDTO.getCustomerPhone());
         }
+    }
+    @Override
+    public List<String> findSuggestions(String query) {
+        List<CustomerEntity> list = customerDao.findAll();
+
+        return list.stream()
+                .filter(customerEntity -> customerEntity.getCustomerName().toLowerCase().contains(query.toLowerCase()))
+                .map(customerEntity -> String.format(" Name: %s - Address: %s - Phone: %s", customerEntity.getCustomerName(), customerEntity.getCustomerAddress(), customerEntity.getCustomerPhone()))
+                .collect(Collectors.toList());
     }
 }

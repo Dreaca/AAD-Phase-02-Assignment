@@ -11,4 +11,6 @@ public interface CustomerService {
     List<CustomerDTO> getAllCustomers();
     void deleteCustomer(String customerId);
     void updateCustomer(String customerId, CustomerDTO customerDTO);
+
+    List<String> findSuggestions(String trim);
 }

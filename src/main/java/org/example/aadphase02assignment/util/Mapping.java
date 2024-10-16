@@ -2,8 +2,10 @@ package org.example.aadphase02assignment.util;
 
 import org.example.aadphase02assignment.dto.impl.CustomerDTO;
 import org.example.aadphase02assignment.dto.impl.ItemDTO;
+import org.example.aadphase02assignment.dto.impl.OrderDTO;
 import org.example.aadphase02assignment.entity.impl.CustomerEntity;
 import org.example.aadphase02assignment.entity.impl.ItemEntity;
+import org.example.aadphase02assignment.entity.impl.OrderEntity;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,11 @@ public class Mapping {
     }
     public List<ItemDTO> toItemDTOList(List<ItemEntity> itemEntityList) {
         return modelMapper.map(itemEntityList, new TypeToken<List<ItemDTO>>() {}.getType());
+    }
+    public OrderEntity toOrderEntity(OrderDTO orderDTO) {
+        return modelMapper.map(orderDTO, OrderEntity.class);
+    }
+    public OrderDTO toOrderDTO(OrderEntity orderEntity) {
+        return modelMapper.map(orderEntity, OrderDTO.class);
     }
 }

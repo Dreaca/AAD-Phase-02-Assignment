@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Data
+@Table(name = "Orders")
 public class OrderEntity implements SuperEntity {
     @Id
     private String orderId;
