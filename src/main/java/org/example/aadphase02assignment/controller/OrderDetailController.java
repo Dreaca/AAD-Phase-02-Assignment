@@ -1,7 +1,10 @@
 package org.example.aadphase02assignment.controller;
 
+import org.example.aadphase02assignment.dto.impl.CartItemDto;
+import org.example.aadphase02assignment.dto.impl.ItemDTO;
 import org.example.aadphase02assignment.dto.impl.OrderDTO;
 import org.example.aadphase02assignment.dto.impl.OrderRequestDto;
+import org.example.aadphase02assignment.entity.impl.ItemEntity;
 import org.example.aadphase02assignment.service.CustomerService;
 import org.example.aadphase02assignment.service.ItemService;
 import org.example.aadphase02assignment.service.OrderService;
@@ -26,10 +29,11 @@ public class OrderDetailController {
     @Autowired
     private CustomerService customerService;
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<OrderRequestDto> getOrders(){
+    public List<OrderRequestDto> getOrders() {
         List<OrderDTO> orders = orderService.getOrders();
         System.out.println(orders.toString());
-        List<OrderRequestDto> dtos = new ArrayList<OrderRequestDto>();
+        List<OrderRequestDto> dtos = new ArrayList<>();
+
         orders.forEach(order -> {
             OrderRequestDto dto = new OrderRequestDto();
             dto.setOrderId(order.getOrderId());
@@ -39,9 +43,26 @@ public class OrderDetailController {
             dto.setTotal(order.getTotal());
             dto.setDiscount(order.getDiscount());
             dto.setSubTotal(order.getSubtotal());
-            dto.setCartItems(null);
+
+
+            List<CartItemDto> cartItems = new ArrayList<>();
+            order.getItems().forEach(orderDetail -> {
+                CartItemDto cartItem = new CartItemDto();
+                cartItem.setItemCode(orderDetail.getItemId());
+                cartItem.setQty(orderDetail.getQty());
+                ItemDTO item = (ItemDTO) itemService.getItemById(orderDetail.getItemId());
+                if (item != null) {
+                    cartItem.setDesc(item.getItemName());
+                    cartItem.setUnitPrice(item.getPrice());
+                    cartItem.setTotalPrice(cartItem.getUnitPrice() * cartItem.getQty());
+                }
+                cartItems.add(cartItem);
+            });
+
+            dto.setCartItems(cartItems);
             dtos.add(dto);
         });
+
         return dtos;
     }
 }
